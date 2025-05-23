@@ -132,6 +132,49 @@
       display: block;
       margin: 0.2rem 0;
     }
+    /* Contact form styles */
+    form {
+      display: flex;
+      flex-direction: column;
+      max-width: 600px;
+      margin-top: 1rem;
+    }
+    form label {
+      margin: 0.5rem 0 0.2rem 0;
+      font-weight: 600;
+    }
+    form input, form textarea {
+      padding: 0.6rem;
+      border: 1.5px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-family: 'Georgia', serif;
+      transition: border-color 0.3s;
+    }
+    form input:focus, form textarea:focus {
+      outline: none;
+      border-color: #4a3f35;
+      box-shadow: 0 0 5px #a8957f;
+    }
+    form button {
+      margin-top: 1.2rem;
+      padding: 0.8rem;
+      background-color: #4a3f35;
+      color: #f5f3eb;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    form button:hover {
+      background-color: #3a3329;
+    }
+    #formStatus {
+      margin-top: 1rem;
+      font-style: italic;
+      font-weight: 600;
+    }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
@@ -173,7 +216,7 @@
   </div>
 
   <section class="hero">
-    <img src="profile.jpg" alt="Vikas Kanojiya">
+    <img src="img1.jpg" alt="Vikas Kanojiya">
     <div class="hero-content">
       <h2>Tech Enthusiast & Aspiring Developer</h2>
       <p id="about">Hi, I am <strong>Vikas Virendra Kanojiya</strong>, a BTech student in Electronics and Computer Science Engineering. I'm passionate about creating impactful tech solutions and continuously learning modern web technologies.</p>
@@ -196,13 +239,31 @@
     2. Shopping Website - E-commerce site with cart functionality, cookie consent, and user-friendly UI (linked above).</p>
   </section>
 
+  <!-- Contact Section -->
+  <section class="section" id="contact">
+    <h2>Contact Me</h2>
+    <form id="contactForm" action="https://formspree.io/f/mwpojyod" method="POST">
+      <label for="name">Your Name</label>
+      <input type="text" id="name" name="name" required />
+
+      <label for="message">Your Message</label>
+      <textarea id="message" name="message" rows="4" required></textarea>
+
+      <label for="contact">Your Contact (Email or Phone)</label>
+      <input type="text" id="contact" name="contact" required />
+
+      <button type="submit">Submit</button>
+    </form>
+    <p id="formStatus"></p>
+  </section>
+
   <footer>
     <div class="contact-info">
       <h3>Contact</h3>
-      📞 Mobile: <a href="tel:+919876543210">+91 98765 43210</a><br />
-      💼 LinkedIn: <a href="https://linkedin.com/in/vikaskanojiya" target="_blank">linkedin.com/in/vikaskanojiya</a><br />
-      🐙 GitHub: <a href="https://github.com/vikaskanojiya" target="_blank">github.com/vikaskanojiya</a><br />
-      💬 WhatsApp: <a href="https://wa.me/919876543210" target="_blank">+91 98765 43210</a>
+      📞 Mobile: <a href="tel:+917387492201">Call Me</a><br />
+      💼 LinkedIn: <a href="https://www.linkedin.com/in/vikas-kanojiya-2ab170366?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app">Connect through LinkedIn</a><br />
+      🐙 GitHub: <a href="https://github.com/whovikas" target="_blank">Github</a><br />
+      💬 WhatsApp: <a href="https://wa.me/917837492201?text=Hi%2C%20I%20saw%20your%20portfolio%21" target="_blank">Whatsapp</a>
     </div>
     <p>&copy; 2025 Vikas Virendra Kanojiya. All rights reserved.</p>
   </footer>
@@ -234,6 +295,42 @@
       .catch(error => {
         console.error("Error loading achievements:", error);
       });
+
+    // Formspree form submission handling
+    const form = document.getElementById('contactForm');
+    const status = document.getElementById('formStatus');
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const formData = new FormData(form);
+      fetch(form.action, {
+        method: form.method,
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      }).then(response => {
+        if (response.ok) {
+          status.style.color = 'green';
+          status.textContent = 'Thanks for your message! I will get back to you soon.';
+          form.reset();
+        } else {
+          response.json().then(data => {
+            if (Object.hasOwn(data, 'errors')) {
+              status.style.color = 'red';
+              status.textContent = data["errors"].map(error => error.message).join(", ");
+            } else {
+              status.style.color = 'red';
+              status.textContent = 'Oops! There was a problem submitting your form';
+            }
+          });
+        }
+      }).catch(() => {
+        status.style.color = 'red';
+        status.textContent = 'Oops! There was a problem submitting your form';
+      });
+    });
   </script>
 </body>
 </html>
