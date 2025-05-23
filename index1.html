@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vikas Kanojiya Portfolio</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Georgia', serif;
+      background-color: #f5f3eb;
+      color: #333;
+      transition: background-color 0.3s, color 0.3s;
+      scroll-behavior: smooth;
+    }
+    .dark-mode {
+      background-color: #1e1e1e;
+      color: #e4e4dc;
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: #e8e1d4;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+    .dark-mode nav {
+      background-color: #2a2a2a;
+    }
+    .menu {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+    }
+    .menu div {
+      height: 4px;
+      background: currentColor;
+      margin: 3px 0;
+      width: 25px;
+    }
+    .links {
+      display: flex;
+      gap: 2rem;
+      font-weight: 500;
+    }
+    .links a {
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+    }
+    .links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -4px;
+      left: 0;
+      background-color: #4a3f35;
+      transition: width 0.3s;
+    }
+    .links a:hover::after {
+      width: 100%;
+    }
+    .mobile-links {
+      display: none;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1rem;
+    }
+    .show {
+      display: flex !important;
+    }
+    .hero {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      padding: 5rem 2rem;
+      animation: fadeIn 1s ease-in-out;
+    }
+    .hero img {
+      width: 250px;
+      border-radius: 50%;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      animation: floatIn 1.5s ease forwards;
+      opacity: 0;
+      transform: translateX(-50px);
+    }
+    .hero-content {
+      max-width: 600px;
+      animation: fadeInContent 2s ease forwards;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    .section {
+      padding: 4rem 2rem;
+      max-width: 900px;
+      margin: auto;
+      line-height: 1.6;
+      animation: sectionFade 1s ease forwards;
+    }
+    .section h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #4a3f35;
+    }
+    ul {
+      padding-left: 1.2rem;
+    }
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      background-color: #dfd8c7;
+      color: #333;
+    }
+    .dark-mode footer {
+      background-color: #2a2a2a;
+      color: white;
+    }
+    .contact-info {
+      margin: 1rem 0;
+    }
+    .contact-info a {
+      color: inherit;
+      text-decoration: none;
+      display: block;
+      margin: 0.2rem 0;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes floatIn {
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes fadeInContent {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes sectionFade {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <h1>Vikas Kanojiya</h1>
+    <div class="links" id="desktop-links">
+      <a href="#about">About</a>
+      <a href="#achievements">Achievements</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="shop.html">Shop</a>
+      <button onclick="toggleMode()" id="modeBtn">🌙</button>
+    </div>
+    <div class="menu" onclick="toggleMenu()">
+      <div></div><div></div><div></div>
+    </div>
+  </nav>
+  <div class="mobile-links" id="mobile-links">
+    <a href="#about">About</a>
+    <a href="#achievements">Achievements</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="shop.html">Shop</a>
+    <button onclick="toggleMode()">🌙</button>
+  </div>
+
+  <section class="hero">
+    <img src="profile.jpg" alt="Vikas Kanojiya">
+    <div class="hero-content">
+      <h2>Tech Enthusiast & Aspiring Developer</h2>
+      <p id="about">Hi, I am <strong>Vikas Virendra Kanojiya</strong>, a BTech student in Electronics and Computer Science Engineering. I'm passionate about creating impactful tech solutions and continuously learning modern web technologies.</p>
+    </div>
+  </section>
+
+  <section class="section" id="achievements">
+    <h2>Achievements</h2>
+    <ul id="achievement-list"></ul>
+  </section>
+
+  <section class="section" id="skills">
+    <h2>Skills</h2>
+    <p>I am skilled in HTML, CSS, JavaScript, React, and have a growing interest in backend technologies. I enjoy creating responsive and dynamic web experiences that are user-friendly and visually appealing.</p>
+  </section>
+
+  <section class="section" id="projects">
+    <h2>Projects</h2>
+    <p>1. Portfolio Website - A personal portfolio with dark/light mode, responsive layout, and animated transitions.<br>
+    2. Shopping Website - E-commerce site with cart functionality, cookie consent, and user-friendly UI (linked above).</p>
+  </section>
+
+  <footer>
+    <div class="contact-info">
+      <h3>Contact</h3>
+      📞 Mobile: <a href="tel:+919876543210">+91 98765 43210</a><br />
+      💼 LinkedIn: <a href="https://linkedin.com/in/vikaskanojiya" target="_blank">linkedin.com/in/vikaskanojiya</a><br />
+      🐙 GitHub: <a href="https://github.com/vikaskanojiya" target="_blank">github.com/vikaskanojiya</a><br />
+      💬 WhatsApp: <a href="https://wa.me/919876543210" target="_blank">+91 98765 43210</a>
+    </div>
+    <p>&copy; 2025 Vikas Virendra Kanojiya. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function toggleMode() {
+      const body = document.body;
+      body.classList.toggle("dark-mode");
+      const btn = document.getElementById("modeBtn");
+      btn.textContent = body.classList.contains("dark-mode") ? "☀️" : "🌙";
+    }
+
+    function toggleMenu() {
+      const links = document.getElementById("mobile-links");
+      links.classList.toggle("show");
+    }
+
+    // Load achievements from external JSON
+    fetch('achievements.json')
+      .then(response => response.json())
+      .then(data => {
+        const achievementList = document.getElementById("achievement-list");
+        data.forEach(item => {
+          const li = document.createElement("li");
+          li.textContent = `${item.year} - ${item.title}`;
+          achievementList.appendChild(li);
+        });
+      })
+      .catch(error => {
+        console.error("Error loading achievements:", error);
+      });
+  </script>
+</body>
+</html>
