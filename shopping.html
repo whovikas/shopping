@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Funkiest Shop in Town!</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <style>
+    /* Reset & base */
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #fafafa;
+      color: #333;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .dark-mode {
+      background-color: #121212;
+      color: #eee;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: #4a3f35;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 10000;
+    }
+    header h1 {
+      margin: 0;
+      font-weight: 600;
+      font-size: 1.5rem;
+      cursor: default;
+    }
+    .toggle-mode {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: white;
+      margin-left: 1rem;
+    }
+    .menu {
+      font-size: 1.8rem;
+      cursor: pointer;
+      display: none;
+      user-select: none;
+    }
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: #d1bfa7;
+    }
+    /* Mobile nav */
+    #mobile-links {
+      display: none;
+      flex-direction: column;
+      position: fixed;
+      top: 56px;
+      right: 0;
+      background: #4a3f35;
+      width: 200px;
+      padding: 1rem;
+      height: calc(100% - 56px);
+      box-shadow: -2px 0 8px rgba(0,0,0,0.3);
+      z-index: 10001;
+      animation: slideIn 0.3s forwards;
+    }
+    #mobile-links.show {
+      display: flex;
+    }
+    #mobile-links a {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #6b5e4b;
+    }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0;}
+      to { transform: translateX(0); opacity: 1;}
+    }
+    /* Container and items */
+    .container {
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      animation: fadeIn 1s ease-in-out;
+    }
+    .item {
+      background: white;
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .item:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+    .item img {
+      width: 100%;
+      border-radius: 8px;
+      object-fit: cover;
+      aspect-ratio: 4 / 3;
+    }
+    .item h3 {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+    }
+    .item p.price {
+      margin: 0.5rem 0 1rem 0;
+      font-weight: 600;
+      color: #4a3f35;
+    }
+    .item button {
+      background-color: #4a3f35;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      margin-top: auto;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-right: 0.5rem;
+      flex: 1;
+    }
+    .item button:hover {
+      background-color: #3a3128;
+    }
+    .item .btn-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    /* Cart & Checkout */
+    .cart {
+      margin: 2rem;
+      padding: 1rem;
+      border-top: 2px solid #ccc;
+      background: #fefefe;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      animation: fadeIn 0.7s ease forwards;
+    }
+    .cart h3 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+    .cart ul {
+      list-style-type: disc;
+      padding-left: 1.2rem;
+      max-height: 200px;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+    }
+    .cart li {
+      margin-bottom: 0.4rem;
+    }
+    .cart .total {
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      color: #4a3f35;
+    }
+    .cart button.checkout-btn {
+      background-color: #4a3f35;
+      color: white;
+      padding: 0.7rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s;
+    }
+    .cart button.checkout-btn:hover {
+      background-color: #3a3128;
+    }
+    /* Status message */
+    #statusMsg {
+      text-align: center;
+      font-style: italic;
+      margin: 1rem 0;
+      color: #6b5e4b;
+      min-height: 24px;
+    }
+    /* Cookie Consent */
+    .cookie-consent {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #fff6e0;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
+      z-index: 10002;
+    }
+    .cookie-consent button {
+      margin: 0 0.5rem;
+      padding: 0.4rem 1rem;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      font-weight: 600;
+      transition: background-color 0.3s;
+    }
+    .cookie-consent button:hover {
+      background-color: #d1bfa7;
+    }
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* Responsive */
+    @media (max-width: 700px) {
+      nav {
+        display: none;
+      }
+      .menu {
+        display: block;
+      }
+      .container {
+        padding: 1rem;
+        gap: 1rem;
+      }
+      .item button {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>The Funkiest Shop in Town!</h1>
+    <nav id="desktop-nav">
+      <a href="index1.html">← Back to Portfolio</a>
+    </nav>
+    <div class="menu" id="menu-icon" onclick="toggleMenu()">☰</div>
+    <button class="toggle-mode" onclick="toggleMode()" id="modeBtn" aria-label="Toggle Dark Mode">🌙</button>
+  </header>
+
+  <nav id="mobile-links" aria-label="Mobile Navigation">
+    <a href="portfolio.html" onclick="toggleMenu()">← Back to Portfolio</a>
+  </nav>
+
+  <main class="container" id="product-list" aria-live="polite" aria-atomic="true"></main>
+
+  <div class="cart" id="cart" aria-live="polite" aria-atomic="true"></div>
+
+  <div id="statusMsg" aria-live="polite"></div>
+
+  <div class="cookie-consent" id="cookie-consent" role="alert" aria-live="assertive">
+    This site uses cookies. Accept them?
+    <button onclick="acceptCookies()" aria-label="Accept Cookies">Accept</button>
+    <button onclick="rejectCookies()" aria-label="Reject Cookies">Reject</button>
+  </div>
+
+  <script>
+    const products = [
+      { name: "Leather Wallet", price: 499, image: "wallet.jpg" },
+      { name: "Stylish Backpack", price: 1499, image: "backpack.jpg" },
+      { name: "Noise Cancelling Headphones", price: 2999, image: "headphones.jpg" },
+      { name: "Smart Watch", price: 1999, image: "watch.jpg" },
+      { name: "Sunglasses", price: 899, image: "sunglasses.jpg" },
+      { name: "Bluetooth Speaker", price: 1299, image: "speaker.jpg" },
+      { name: "Fitness Tracker", price: 999, image: "tracker.jpg" },
+      { name: "Laptop Stand", price: 799, image: "stand.jpg" }
+    ];
+
+    const productList = document.getElementById("product-list");
+    const cartDiv = document.getElementById("cart");
+    const statusMsg = document.getElementById("statusMsg");
+    const mobileLinks = document.getElementById("mobile-links");
+    const menuIcon = document.getElementById("menu-icon");
+
+    let cart = [];
+
+    function toggleMenu() {
+      mobileLinks.classList.toggle("show");
+    }
+
+    function toggleMode() {
+      const body = document.body;
+      body.classList.toggle("dark-mode");
+      const btn = document.getElementById("modeBtn");
+      btn.textContent = body.classList.contains("dark-mode") ? "☀️" : "🌙";
+    }
+
+    function acceptCookies() {
+      document.getElementById("cookie-consent").style.display = "none";
+    }
+    function rejectCookies() {
+      document.getElementById("cookie-consent").style.display = "none";
+    }
+
+    // Render products dynamically
+    function renderProducts() {
+      products.forEach((product, index) => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `
+          <img src="${product.image}" alt="${product.name}" loading="lazy" />
+          <h3>${product.name}</h3>
+          <p class="price">₹${product.price}</p>
+          <div class="btn-group">
+            <button aria-label="Add ${product.name} to cart" onclick="addToCart(${index})">Add to Cart</button>
+            <button aria-label="Buy ${product.name} now" onclick="buyNow(${index})">Buy Now</button>
+          </div>
+        `;
+        productList.appendChild(div);
+      });
+    }
+
+    // Add item to cart
+    function addToCart(index) {
+      cart.push(products[index]);
+      showStatus(`Added "${products[index].name}" to cart! 🛒`);
+      displayCart();
+    }
+
+    // Buy now: clear cart, add only this item and proceed to checkout
+    function buyNow(index) {
+      cart = [products[index]];
+      displayCart();
+      showStatus(`You are buying "${products[index].name}" right now! 💥`);
+    }
+
+    // Display cart and checkout button
+    function displayCart() {
+      if (cart.length === 0) {
+        cartDiv.innerHTML = "<h3>Your cart is empty.</h3>";
+        clearStatus();
+        return;
+      }
+      let content = "<h3>Cart Items:</h3><ul>";
+      let total = 0;
+      cart.forEach((item, i) => {
+        content += `<li>${item.name} - ₹${item.price} <button aria-label='Remove ${item.name}' onclick='removeFromCart(${i})' style='margin-left:8px;color:#c0392b;background:none;border:none;cursor:pointer;'>✖</button></li>`;
+        total += item.price;
+      });
+      content += `</ul><p class="total">Total: ₹${total}</p>`;
+      content += `<button class="checkout-btn" onclick="checkout()">Checkout</button>`;
+      cartDiv.innerHTML = content;
+    }
+
+    // Remove item from cart
+    function removeFromCart(index) {
+      const removed = cart.splice(index, 1)[0];
+      showStatus(`Removed "${removed.name}" from cart.`);
+      displayCart();
+    }
+
+    // Checkout function
+    function checkout() {
+      if (cart.length === 0) {
+        alert("Your cart is empty! Add items to checkout.");
+        return;
+      }
+      // Simulate checkout process
+      alert(`Thank you for your purchase! Total amount: ₹${cart.reduce((a,b) => a + b.price, 0)}`);
+      cart = [];
+      displayCart();
+      showStatus("Checkout complete! 🎉");
+    }
+
+    // Show status message with fade-out
+    let statusTimeout;
+    function showStatus(message) {
+      clearTimeout(statusTimeout);
+      statusMsg.textContent = message;
+      statusTimeout = setTimeout(() => {
+        statusMsg.textContent = '';
+      }, 4000);
+    }
+    function clearStatus() {
+      statusMsg.textContent = '';
+      clearTimeout(statusTimeout);
+    }
+
+    // Initial setup
+    renderProducts();
+    displayCart();
+  </script>
+</body>
+</html>
